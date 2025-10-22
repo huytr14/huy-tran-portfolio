@@ -1279,7 +1279,7 @@ export default function App() {
       </div>
 
       {/* Bottom frame */}
-      <div className="h-1 w-full bg-[var(--ink)] opacity-20" />
+{/* <div className="h-1 w-full bg-[var(--ink)] opacity-20" /> */}
 
       <StyleInjector />
     </div>
