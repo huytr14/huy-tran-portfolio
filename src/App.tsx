@@ -1,5 +1,30 @@
 import React, { useEffect, useMemo, useState } from "react";
 
+/* ---------- Types ---------- */
+interface Project {
+  title: string;
+  year: string;
+  description: string;
+  tags: string[];
+  github?: string;
+  store?: string;
+  live?: string;
+  url?: string;
+}
+interface ExperienceItem {
+  role: string;
+  company: string;
+  period: string;
+  urls?: string[];
+  bullets: string[];
+}
+interface Certificate {
+  title: string;
+  issuer?: string;
+  year?: string;
+  desc?: string;
+}
+
 // =============================================
 // Pixel Portfolio – Single-Page Landing (React)
 // - TailwindCSS utilities
@@ -594,7 +619,7 @@ const Settings: React.FC<{ themeKey: keyof typeof THEMES; setThemeKey: (k: keyof
   <div>
     <div className="text-[var(--ink-dim)] uppercase text-xs mb-3 tracking-wider">Settings</div>
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-      {Object.entries(THEMES).map(([key, t]) => (
+      {Object.entries(THEMES).map(([key, t]: [string, { name: string; bg: string; paper: string; ink: string; dim: string; accent: string }]) => (
         <button
           key={key}
           onClick={() => setThemeKey(key as keyof typeof THEMES)}
@@ -687,7 +712,9 @@ export default function App() {
         <section className="relative border border-[var(--ink-dim)] p-4 lg:p-6 bg-[var(--paper)] shadow-[0_0_0_2px_var(--paper)] min-h-0 overflow-auto">
           {/* window */}
           <div className="flex items-center justify-between">
-            <div className="text-[var(--ink-dim)] text-[10px] uppercase tracking-widest">{PROFILE.tagline}</div>
+            <div>
+              <div className="text-[var(--ink-dim)] text-[10px] uppercase tracking-widest">{PROFILE.tagline}</div>
+            </div>
             <div className="text-[var(--ink-dim)] text-[10px]">{PROFILE.location}</div>
           </div>
 
@@ -777,7 +804,7 @@ export default function App() {
 
           {/* status bar */}
           <div className="border-t border-[var(--ink-dim)] px-3 py-2 text-[10px] text-[var(--ink-dim)] flex items-center gap-3">
-            <span>tran-gia-huy portfolio v1.0</span>
+            <span className="flex items-center gap-2"><PixelCat /> tran-gia-huy portfolio v1.0</span>
             <span className="ml-auto">{PROFILE.handle}</span>
           </div>
         </section>
