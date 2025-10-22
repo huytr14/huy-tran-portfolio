@@ -326,23 +326,6 @@ const useKeyboardMenu = (items: string[], onSelect: (val: string) => void) => {
   return { index, setIndex };
 };
 
-const HighlightText: React.FC<{ text: string }> = ({ text }) => {
-  const parts = text.split(/<b>(.*?)<\/b>/g);
-  return (
-    <>
-      {parts.map((part, i) =>
-        i % 2 === 1 ? (
-          <b key={i} className="highlight-text">
-            {part}
-          </b>
-        ) : (
-          <React.Fragment key={i}>{part}</React.Fragment>
-        )
-      )}
-    </>
-  );
-};
-
 /* ===========================
    Typewriter: HTML-aware (<b>)
    =========================== */
@@ -615,7 +598,7 @@ const AskMeChat: React.FC<{ t: (k: string) => string }> = ({ t }) => {
           }}
         />
         <button
-          onClick={ask}
+          onClick={() => ask()}
           disabled={busy}
           className="px-3 py-1 bg-[var(--accent)] text-black text-sm font-bold disabled:opacity-60 transition-transform hover:scale-105 active:scale-100"
         >
