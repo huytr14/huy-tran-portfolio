@@ -77,14 +77,14 @@ const SKILLS = {
   domain: ["SEO", "JSON-LD", "Core Web Vitals", "Odoo 16"],
 };
 
-const EXPERIENCE = [
+const EXPERIENCE: ExperienceItem[] = [
   {
     role: "Marketing Online Intern",
     company: "Thanh An AutoCare",
     period: "07/2025 – 09/2025",
     urls: [
-  "https://thanhanautocare.com",
-  "https://camerahanhtrinhxeoto.vn",
+      "https://thanhanautocare.com",
+      "https://camerahanhtrinhxeoto.vn",
     ],
 
     bullets: [
@@ -95,7 +95,7 @@ const EXPERIENCE = [
   },
 ];
 
-const CERTIFICATES = [
+const CERTIFICATES: Certificate[] = [
   {
     title: "TOEIC 520 (Listening & Reading)",
     issuer: "ETS",
@@ -162,24 +162,6 @@ const useKeyboardMenu = (items: string[], onSelect: (val: string) => void) => {
 };
 
 // ---- Tiny Pixel Components ---------------------------------
-const PixelLamp: React.FC = () => (
-  <div className="relative w-14 h-20">
-    <div className="absolute left-1/2 -translate-x-1/2 top-0 w-3 h-3 bg-[var(--ink)]" />
-    <div className="absolute left-1/2 -translate-x-1/2 top-2 w-10 h-2 bg-[var(--ink)]" />
-    <div className="absolute left-1/2 -translate-x-1/2 top-4 w-8 h-2 bg-[var(--ink)]" />
-    <div
-      className="absolute top-6 left-1/2 -translate-x-1/2 w-0 h-0"
-      style={{
-        borderLeft: "28px solid transparent",
-        borderRight: "28px solid transparent",
-        borderTop: `34px solid var(--accent-dim)`,
-        filter: "blur(1px)",
-        opacity: 0.4,
-      }}
-    />
-  </div>
-);
-
 const PixelCat: React.FC = () => (
   <div className="flex items-end gap-1 text-[var(--ink)]">
     <div className="w-3 h-3 bg-[var(--ink)]" />
