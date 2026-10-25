@@ -173,26 +173,67 @@ function ExternalIcon() {
   );
 }
 
+/* CVs are stored in the repo as base64 text (public/cv/*.pdf.b64) because the
+   GitHub connector only pushes UTF-8 files; the browser decodes them back
+   into the original PDF on download. */
+const CV_FILES = [
+  { label: "Developer CV", file: "GiaHuyTran_CV_Developer.pdf" },
+  { label: "Technical Marketing CV", file: "GiaHuyTran_CV_TechnicalMarketing.pdf" },
+];
+
+async function downloadCv(file: string) {
+  try {
+    const res = await fetch(`/cv/${file}.b64`);
+    if (!res.ok) return;
+    const b64 = (await res.text()).replace(/\s/g, "");
+    const bin = atob(b64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    const url = URL.createObjectURL(new Blob([bytes], { type: "application/pdf" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = file;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 4000);
+  } catch {
+    /* download failed — visitor can still reach me by email below */
+  }
+}
+
 function RequestCvButton({ className = "" }: { className?: string }) {
-  const [copied, setCopied] = useState(false);
-  const mailto = `mailto:${PROFILE.email}?subject=CV%20request%20—%20Gia%20Huy%20Tran`;
+  const [open, setOpen] = useState(false);
   return (
-    <a
-      href={mailto}
-      title={PROFILE.email}
-      onClick={() => {
-        try {
-          navigator.clipboard?.writeText(PROFILE.email);
-        } catch {
-          /* clipboard unavailable — the mailto still fires */
-        }
-        setCopied(true);
-        window.setTimeout(() => setCopied(false), 2500);
-      }}
-      className={`rounded border border-accent px-4 py-2 font-mono text-[13px] text-accent transition-colors hover:bg-accent/10 ${className}`}
-    >
-      {copied ? "✓ Email copied" : "Request CV"}
-    </a>
+    <div className={`relative ${className}`}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="rounded border border-accent px-4 py-2 font-mono text-[13px] text-accent transition-colors hover:bg-accent/10"
+      >
+        Request CV ▾
+      </button>
+      {open && (
+        <div className="absolute right-0 z-50 mt-2 w-72 rounded bg-navy-light p-2 shadow-xl ring-1 ring-navy-lightest">
+          {CV_FILES.map((cv) => (
+            <button
+              key={cv.file}
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                void downloadCv(cv.file);
+              }}
+              className="flex w-full items-center justify-between rounded px-3 py-2.5 text-left text-sm text-slate-lightest transition-colors hover:bg-navy-lightest/50 hover:text-accent"
+            >
+              <span>
+                {cv.label} <span className="font-mono text-xs text-slate">PDF ↓</span>
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -427,6 +468,18 @@ export default function App() {
               {PROFILE.email}
             </a>
           </p>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+            {CV_FILES.map((cv) => (
+              <button
+                key={cv.file}
+                type="button"
+                onClick={() => void downloadCv(cv.file)}
+                className="font-mono text-sm text-accent underline decoration-accent/50 underline-offset-4 hover:decoration-accent"
+              >
+                ↓ {cv.label} (PDF)
+              </button>
+            ))}
+          </div>
           <div className="mt-8 flex items-center justify-center gap-6 lg:hidden">
             <a href={PROFILE.github} target="_blank" rel="noreferrer" aria-label="GitHub" className="text-slate hover:text-accent"><GithubIcon /></a>
             <a href={PROFILE.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn" className="text-slate hover:text-accent"><LinkedinIcon /></a>
