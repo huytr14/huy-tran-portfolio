@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 /* ------------------------------------------------------------------ */
 /*  Content — source of truth: Gia Huy Tran's CVs (Developer +         */
@@ -237,6 +237,52 @@ function RequestCvButton({ className = "" }: { className?: string }) {
   );
 }
 
+/* Mail links: a bare mailto looks dead on devices without a default mail
+   app, so clicking also copies the address and shows a confirmation. */
+function MailCopyLink({
+  className = "",
+  tooltipSide = "right",
+  children,
+}: {
+  className?: string;
+  tooltipSide?: "right" | "left" | "top";
+  children: ReactNode;
+}) {
+  const [copied, setCopied] = useState(false);
+  const tooltipPos =
+    tooltipSide === "right"
+      ? "left-full top-1/2 ml-3 -translate-y-1/2"
+      : tooltipSide === "left"
+        ? "right-full top-1/2 mr-3 -translate-y-1/2"
+        : "bottom-full left-1/2 mb-2 -translate-x-1/2";
+  return (
+    <span className="relative inline-flex">
+      <a
+        href={`mailto:${PROFILE.email}`}
+        title={PROFILE.email}
+        aria-label={`Email — ${PROFILE.email}`}
+        onClick={() => {
+          try {
+            navigator.clipboard?.writeText(PROFILE.email);
+          } catch {
+            /* clipboard unavailable — the mailto still fires */
+          }
+          setCopied(true);
+          window.setTimeout(() => setCopied(false), 2200);
+        }}
+        className={className}
+      >
+        {children}
+      </a>
+      {copied && (
+        <span className={`absolute z-50 whitespace-nowrap rounded bg-accent px-2 py-1 font-mono text-[11px] font-medium text-navy shadow-lg ${tooltipPos}`}>
+          ✓ Email copied
+        </span>
+      )}
+    </span>
+  );
+}
+
 function ExperienceTabs() {
   const [active, setActive] = useState(0);
   const job = EXPERIENCE[active];
@@ -316,17 +362,18 @@ export default function App() {
       <div className="fixed bottom-0 left-8 z-10 hidden flex-col items-center gap-6 lg:flex" aria-label="Social links">
         <a href={PROFILE.github} target="_blank" rel="noreferrer" aria-label="GitHub" className="text-slate transition-all hover:-translate-y-0.5 hover:text-accent"><GithubIcon /></a>
         <a href={PROFILE.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn" className="text-slate transition-all hover:-translate-y-0.5 hover:text-accent"><LinkedinIcon /></a>
-        <a href={`mailto:${PROFILE.email}`} aria-label="Email" className="text-slate transition-all hover:-translate-y-0.5 hover:text-accent"><MailIcon /></a>
+        <MailCopyLink className="text-slate transition-all hover:-translate-y-0.5 hover:text-accent">
+          <MailIcon />
+        </MailCopyLink>
         <span className="h-24 w-px bg-slate" />
       </div>
       <div className="fixed bottom-0 right-8 z-10 hidden flex-col items-center gap-6 lg:flex">
-        <a
-          href={`mailto:${PROFILE.email}`}
+        <MailCopyLink
+          tooltipSide="left"
           className="font-mono text-xs tracking-widest text-slate transition-all hover:-translate-y-0.5 hover:text-accent"
-          style={{ writingMode: "vertical-rl" }}
         >
-          {PROFILE.email}
-        </a>
+          <span style={{ writingMode: "vertical-rl" }}>{PROFILE.email}</span>
+        </MailCopyLink>
         <span className="h-24 w-px bg-slate" />
       </div>
 
@@ -483,7 +530,9 @@ export default function App() {
           <div className="mt-8 flex items-center justify-center gap-6 lg:hidden">
             <a href={PROFILE.github} target="_blank" rel="noreferrer" aria-label="GitHub" className="text-slate hover:text-accent"><GithubIcon /></a>
             <a href={PROFILE.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn" className="text-slate hover:text-accent"><LinkedinIcon /></a>
-            <a href={`mailto:${PROFILE.email}`} aria-label="Email" className="text-slate hover:text-accent"><MailIcon /></a>
+            <MailCopyLink tooltipSide="top" className="text-slate hover:text-accent">
+              <MailIcon />
+            </MailCopyLink>
           </div>
         </section>
       </main>
