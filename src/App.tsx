@@ -9,7 +9,7 @@ const PROFILE = {
   name: "Gia Huy Tran",
   role: "Full-Stack Developer & Technical Marketer",
   location: "Ho Chi Minh City, VN",
-  email: "tghuy140104@gmail.com",
+  email: "tghuy141@gmail.com",
   phone: "+84 817 174 226",
   phoneHref: "tel:+84817174226",
   github: "https://github.com/huytr14",
@@ -173,6 +173,29 @@ function ExternalIcon() {
   );
 }
 
+function RequestCvButton({ className = "" }: { className?: string }) {
+  const [copied, setCopied] = useState(false);
+  const mailto = `mailto:${PROFILE.email}?subject=CV%20request%20—%20Gia%20Huy%20Tran`;
+  return (
+    <a
+      href={mailto}
+      title={PROFILE.email}
+      onClick={() => {
+        try {
+          navigator.clipboard?.writeText(PROFILE.email);
+        } catch {
+          /* clipboard unavailable — the mailto still fires */
+        }
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 2500);
+      }}
+      className={`rounded border border-accent px-4 py-2 font-mono text-[13px] text-accent transition-colors hover:bg-accent/10 ${className}`}
+    >
+      {copied ? "✓ Email copied" : "Request CV"}
+    </a>
+  );
+}
+
 function ExperienceTabs() {
   const [active, setActive] = useState(0);
   const job = EXPERIENCE[active];
@@ -241,20 +264,10 @@ export default function App() {
               </li>
             ))}
             <li>
-              <a
-                href={`mailto:${PROFILE.email}?subject=CV%20request%20—%20Gia%20Huy%20Tran`}
-                className="rounded border border-accent px-4 py-2 font-mono text-[13px] text-accent transition-colors hover:bg-accent/10"
-              >
-                Request CV
-              </a>
+              <RequestCvButton />
             </li>
           </ol>
-          <a
-            href={`mailto:${PROFILE.email}?subject=CV%20request%20—%20Gia%20Huy%20Tran`}
-            className="rounded border border-accent px-4 py-2 font-mono text-[13px] text-accent md:hidden"
-          >
-            Request CV
-          </a>
+          <RequestCvButton className="md:hidden" />
         </nav>
       </header>
 
@@ -409,6 +422,11 @@ export default function App() {
               {PROFILE.phone}
             </a>
           </div>
+          <p className="mt-5 font-mono text-sm">
+            <a href={`mailto:${PROFILE.email}`} className="text-slate-lightest underline decoration-accent/50 underline-offset-4 hover:text-accent">
+              {PROFILE.email}
+            </a>
+          </p>
           <div className="mt-8 flex items-center justify-center gap-6 lg:hidden">
             <a href={PROFILE.github} target="_blank" rel="noreferrer" aria-label="GitHub" className="text-slate hover:text-accent"><GithubIcon /></a>
             <a href={PROFILE.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn" className="text-slate hover:text-accent"><LinkedinIcon /></a>
