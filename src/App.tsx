@@ -116,11 +116,10 @@ const PROJECTS = [
 
 function Logo() {
   return (
-    <a href="#top" className="flex items-center gap-3" aria-label="huy — home">
+    <a href="#top" className="flex items-center" aria-label="huy — home">
       <span className="flex h-11 w-14 items-center justify-center rounded-md border-2 border-accent font-mono text-sm font-bold text-accent">
         huy
       </span>
-      <span className="font-mono text-lg font-medium text-slate-lightest">huy.</span>
     </a>
   );
 }
