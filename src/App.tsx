@@ -16,6 +16,12 @@ const PROFILE = {
   linkedin: "https://www.linkedin.com/in/tghuy14",
 };
 
+/* Opens Gmail's compose window directly (a bare mailto: does nothing on
+   devices without a default mail app). */
+const GMAIL_COMPOSE = `https://mail.google.com/mail/?view=cm&fs=1&to=${PROFILE.email}&su=${encodeURIComponent(
+  "Hello Gia Huy — from your portfolio",
+)}`;
+
 const NAV = [
   { n: "01", label: "About", href: "#about" },
   { n: "02", label: "Experience", href: "#experience" },
@@ -258,7 +264,9 @@ function MailCopyLink({
   return (
     <span className="relative inline-flex">
       <a
-        href={`mailto:${PROFILE.email}`}
+        href={GMAIL_COMPOSE}
+        target="_blank"
+        rel="noreferrer"
         title={PROFILE.email}
         aria-label={`Email — ${PROFILE.email}`}
         onClick={() => {
@@ -503,7 +511,7 @@ export default function App() {
             them grow. My inbox is always open — I&apos;ll do my best to get back to you.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <a href={`mailto:${PROFILE.email}`} className="rounded border border-accent px-7 py-3.5 font-mono text-sm text-accent transition-colors hover:bg-accent/10">
+            <a href={GMAIL_COMPOSE} target="_blank" rel="noreferrer" className="rounded border border-accent px-7 py-3.5 font-mono text-sm text-accent transition-colors hover:bg-accent/10">
               Say Hello
             </a>
             <a href={PROFILE.phoneHref} className="font-mono text-sm text-slate-lightest hover:text-accent">
@@ -511,7 +519,7 @@ export default function App() {
             </a>
           </div>
           <p className="mt-5 font-mono text-sm">
-            <a href={`mailto:${PROFILE.email}`} className="text-slate-lightest underline decoration-accent/50 underline-offset-4 hover:text-accent">
+            <a href={GMAIL_COMPOSE} target="_blank" rel="noreferrer" className="text-slate-lightest underline decoration-accent/50 underline-offset-4 hover:text-accent">
               {PROFILE.email}
             </a>
           </p>
